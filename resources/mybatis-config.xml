@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- 
+	이 문서의 형식이 configuration(== 환경설정)임을 알려줌
+	=> configuration 요소가 전체를 감싼다.
+	!DOCTYPE configuration 
+	DTD : 유효성 검사
+-->
+<configuration>
+    <!-- settings : MyBatis 구동 시 선언 할 설정들을 작성하는 영역 -->
+    <settings>
+    	<!-- 만약 빈 값으로 데이터가 전달되면 NULL로 인식하겠다. (무조건 대문자로 써야함!) 오라클쓸거면 이거 쓰자~ -->
+    	<setting name="jdbcTypeForNull" value="NULL"/>
+    </settings>
+    
+    <!-- typeAliases : VO / DTO 클래스들의 풀 클래스명을 단순한 별칭으로 사용하기 위해 등록하는 영역 -->
+    <typeAliases>
+    	<typeAlias type="com.kh.mybatis.member.model.vo.Member" alias="member"/>
+    	<typeAlias type="com.kh.mybatis.board.model.vo.Board" alias="board"/>
+    </typeAliases>
+    
+    <!-- 
+    	environments : MyBatis에서 연동할 DB의 정보들을 등록하는 영역(여러 개의 정보를 등록할 수 있음)
+    	=> default 속성으로 여러개의 id중 어떤 DB를 기본 DB로 사용할 것인지 꼭 지정해야함
+    	
+    -->
+    <environments default="development">
+    	<environment id="development">
+    		<!-- 
+    			* transactionManager : type속성값으로 JDBC와 MANAGED 중 하나를 선택할 수 있음
+    			- JDBC : 트랜잭션을 개발자가 직접 관리하겠다 (수동 commit)
+    			- MANAGED : 트랜잭션에 대해 어떤 영향도 행사하지 않겠다 (자동 commit)
+    		-->
+    		<transactionManager type="JDBC" />
+    		<!--
+    			* dataSource : type속성값으로 POOLED, UNPOOLED 둘 중 하나를 선택할 수 있음 (ConnectionPool)
+    			=> ConnectionPool : Connection 객체를 담아둘 수 있는 영역, 한번 생성된 Connection을 재사용
+    			
+    			- POOLED : ConnectionPool 사용
+    			- UNPOOLED : ConnectionPool 미사용
+    			
+    			- 매 연결시 마다 새롭게 Connection을 생성할 것 인지, 만들어둔 Connection으로 연결시키고 해제시킬 것 인지
+    			- POOLED
+    		-->
+    		<dataSource type="UNPOOLED">
+    			<property name="driver" value="oracle.jdbc.driver.OracleDriver" />
+    			<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+    			<property name="username" value="SERVER" />
+    			<property name="password" value="SERVER" />
+    		</dataSource>
+    	</environment>
+    </environments>
+    
+    <!-- mappers : 실행할 SQL문을 기록해둔 mapper파일을 등록하는 영역 -->
+    <mappers>
+    	<mapper resource="/mapper/member-mapper.xml" />
+    	<mapper resource="/mapper/board-mapper.xml" />
+    </mappers>
+    
+</configuration>
+
+
+
+
+
+
+
+
+
+
