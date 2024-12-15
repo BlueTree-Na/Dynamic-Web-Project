@@ -3,7 +3,9 @@ package com.kh.mybatis.board.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.mybatis.board.model.vo.Attachment;
 import com.kh.mybatis.board.model.vo.Board;
+import com.kh.mybatis.board.model.vo.Category;
 import com.kh.mybatis.board.model.vo.Reply;
 import com.kh.mybatis.common.PageInfo;
 
@@ -33,5 +35,19 @@ public interface BoardService {
 	int searchedCount(Map<String, String> map); // 검색된 목록 수
 	List<Board> selectSearchList(PageInfo pi, Map<String, String> map); //
 	
+	// 카테고리 선택
+	List<Category> selectCategory();
 	
+	// 게시글 작성(추가)
+	int insertBoard(Board board, Attachment attachment);
+	
+	// 작성된 게시글 아이디로 조회 ( 게시글 + 첨부파일 )
+	Board findById(int boardNo);
+	
+	Attachment selectAttachment(int boardNo);
+	
+	// 게시글 수정
+	int update(Board board, Attachment attachment);
+	
+	 
 }

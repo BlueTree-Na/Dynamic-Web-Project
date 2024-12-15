@@ -6,7 +6,9 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 
+import com.kh.mybatis.board.model.vo.Attachment;
 import com.kh.mybatis.board.model.vo.Board;
+import com.kh.mybatis.board.model.vo.Category;
 import com.kh.mybatis.board.model.vo.Reply;
 import com.kh.mybatis.common.PageInfo;
 
@@ -58,6 +60,44 @@ public class BoardDao {
 		return sqlSession.selectList("boardMapper.selectSearchList", map, rowBounds);
 	}
 	
+	public List<Category> selectCategory(SqlSession sqlSession){
+		return sqlSession.selectList("boardMapper.selectCategory");
+	}
 	
+	public int insertBoard(SqlSession sqlSession, Board board) {
+		return sqlSession.insert("boardMapper.insertBoard", board);
+	}
+	
+	public int insertAttachment(SqlSession sqlSession, Attachment attachment) {
+		return sqlSession.insert("boardMapper.insertAttachment", attachment);
+	}
+	
+	public Board findById(SqlSession sqlSession, int boardNo) {
+		Board board = sqlSession.selectOne("boardMapper.findById", boardNo);
+		System.out.println(board + " 여기 DAO");
+		return sqlSession.selectOne("boardMapper.findById", boardNo);
+	}
+	
+	public Attachment selectAttachment(SqlSession sqlSession, int boardNo) {
+		return sqlSession.selectOne("boardMapper.selectAttachment", boardNo);
+	}
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

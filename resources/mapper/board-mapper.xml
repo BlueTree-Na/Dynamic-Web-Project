@@ -8,6 +8,7 @@
 	<sql id="selectColumn">
 		SELECT
 			   BOARD_NO AS boardNo,
+			   CATEGORY_NAME AS category,
 			   BOARD_TITLE AS boardTitle,
 			   USER_ID AS boardWriter,
 			   COUNT,
@@ -29,6 +30,8 @@
 		<include refid="selectColumn" />
 		  FROM
 		  	   BOARD
+		  JOIN
+		  	   CATEGORY USING(CATEGORY_NO)
 		  JOIN
 		  	   MEMBER ON (BOARD_WRITER = USER_NO)
 		 WHERE
@@ -57,6 +60,8 @@
 			   BOARD_CONTENT AS boardContent
 		  FROM
 		  	   BOARD
+		  JOIN
+		  	   CATEGORY USING(CATEGORY_NO)
 		  JOIN
 		  	   MEMBER ON (BOARD_WRITER = USER_NO)
 		 WHERE
@@ -104,6 +109,7 @@
 		       COUNT,
 		       BOARD.CREATE_DATE AS createDate,
 		       BOARD_CONTENT AS boardContent,
+		       CATEGORY_NAME AS category,
 		       
 		       REPLY_NO AS replyNo,
 		       M2.USER_ID AS replyWriter,
@@ -111,6 +117,8 @@
 		       REPLY.CREATE_DATE as replyDate
 		  FROM
 		       BOARD
+		  JOIN 
+		  	   CATEGORY USING(CATEGORY_NO)
 		  LEFT
 		  JOIN
 		       MEMBER M1 ON (BOARD_WRITER = M1.USER_NO)
@@ -180,6 +188,106 @@
 		 	BY
 		 	   BOARD_NO DESC	  
 	</select>
+	
+	<select id="selectCategory" resultType="com.kh.mybatis.board.model.vo.Category">
+		SELECT 
+			   CATEGORY_NO AS categoryNo,
+			   CATEGORY_NAME AS categoryName
+		  FROM
+		  	   CATEGORY
+		 ORDER
+		 	BY
+		 	   CATEGORY_NO ASC
+	</select>
+	
+	<insert id="insertBoard" parameterType="board">
+		INSERT
+		  INTO
+		  	   BOARD 
+			   (
+			   BOARD_NO,
+			   BOARD_TYPE,
+			   CATEGORY_NO,
+			   BOARD_TITLE,
+			   BOARD_CONTENT,
+			   BOARD_WRITER
+			   )
+		VALUES
+			   (
+			   SEQ_BNO.NEXTVAL,
+			   1,
+			   #{category},
+			   #{boardTitle},
+			   #{boardContent},
+			   #{boardWriter}
+			   )
+	</insert>
+	
+	<insert id="insertAttachment" parameterType="attachment">
+		INSERT
+		  INTO
+		  	   ATTACHMENT
+		  	   (
+		  	   FILE_NO,
+			   REF_BNO,
+			   ORIGIN_NAME,
+			   CHANGE_NAME,
+			   FILE_PATH
+		  	   )
+		VALUES
+			   (
+			   SEQ_FNO.NEXTVAL,
+		 	   SEQ_BNO.CURRVAL,
+		 	   #{originName},
+		 	   #{changeName},
+		 	   #{filePath}
+			   )
+	</insert>
+	
+	<select id="findById" parameterType="_int" resultType="board">
+		SELECT
+               BOARD_NO,
+               CATEGORY_NAME,
+               BOARD_TITLE,
+               BOARD_CONTENT,
+               USER_ID,
+               CREATE_DATE
+          FROM
+               BOARD
+          LEFT
+          JOIN
+               CATEGORY USING(CATEGORY_NO)
+          JOIN
+               MEMBER ON (BOARD_WRITER = USER_NO)
+         WHERE
+               BOARD_NO = #{boardNo}
+           AND
+               BOARD.STATUS = 'Y'
+	</select>
+	
+	<select id="selectAttachment" parameterType="_int" resultType="attachment">
+		SELECT
+			   FILE_NO,
+			   ORIGIN_NAME,
+			   CHANGE_NAME,
+			   FILE_PATH
+		  FROM
+			   ATTACHMENT
+		 WHERE
+		 	   REF_BNO = #{boardNo}
+		 ORDER
+		 	BY
+		 	   FILE_NO ASC
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

@@ -109,16 +109,11 @@
 									<td><button class="btn" style="width : 100%; height : 100%; background-color: #52b1ff; color : white;">댓글등록</button></td>
 								</c:otherwise>
 							</c:choose>
+						
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${ board.replyList }" var="r">
-						<tr>
-							<td>${ r.replyWriter }</td>
-							<td>${ r.replyContent }</td>
-							<td>${ r.createDate }</td>
-						</tr>
-					</c:forEach>
+					
 				</tbody>
 			</table>
 			<br><br><br><br>
@@ -128,6 +123,59 @@
 	
 	<jsp:include page="../include/footer.jsp" />
 	
+	<script>
+		
+		function selectReplyList(){
+			
+			$.ajax({
+				url : 'list.reply',
+				type : 'get',
+				data : {
+					boardNo : ${ board.boardNo }
+				},
+				success : function(list){
+					// console.log(list);
+					
+					const result = list.map(e => `<tr>`
+											   + `<td>\${e.replyWriter}</td>`
+											   + `<td>\${e.replyContent}</td>`
+											   + `<td>\${e.createDate}</td>`
+											   + `</tr>`).join();
+					
+					$('#reply-area tbody').html(result);
+				}
+			});
+			
+		}
+		
+		// HTML문서가 전부 로딩된 후 실행할거임!
+		$(function (){
+			selectReplyList();
+		});
+		
+		function insertReply(){
+			
+			$.ajax({
+				url : 'insert.reply',
+				type : 'post',
+				data : {
+					content : $('#replyContent').val(),
+					boardNo : ${ board.boardNo }
+				},
+				success : function(result){
+					// console.log(result);
+					
+					if(result === 'success'){
+						$('#replyContent').val('');
+						selectReplyList();
+						
+					}
+					
+				}
+			})
+		}
+		
+	</script>
 	
 	
 	

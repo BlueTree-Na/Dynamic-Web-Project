@@ -20,6 +20,7 @@
     <typeAliases>
     	<typeAlias type="com.kh.mybatis.member.model.vo.Member" alias="member"/>
     	<typeAlias type="com.kh.mybatis.board.model.vo.Board" alias="board"/>
+    	<typeAlias type="com.kh.mybatis.board.model.vo.Attachment" alias="attachment"/>
     </typeAliases>
     
     <!-- 

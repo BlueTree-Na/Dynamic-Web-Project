@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.kh.mybatis.board.model.service.BoardService;
 import com.kh.mybatis.board.model.service.BoardServiceImpl;
+import com.kh.mybatis.board.model.vo.Attachment;
+import com.kh.mybatis.board.model.vo.Board;
 
 @WebServlet("/detail.board")
 public class BoardDetailController extends HttpServlet {
@@ -23,17 +25,30 @@ public class BoardDetailController extends HttpServlet {
 		
 		int boardNo = Integer.parseInt(request.getParameter("boardNo"));
 		
-		BoardService boardService = new BoardServiceImpl();
+		Board board = new BoardServiceImpl().findById(boardNo);
 		
-		// DML 구문부터 => 조회수 증가
-		// 성공/실패 여부
-		if(boardService.increaseCount(boardNo) > 0) {
+		String path = ""; // 중복코드 있어서
+		
+		// 게시글 조회에 성공 했다면
+		if(board != null) {
 			
-			request.setAttribute("board", boardService.selectBoard(boardNo));
-//			request.setAttribute("list", boardService.selectReplyList(boardNo));
+			// 4_2) ATTACHMENT 테이블 조회
+			Attachment attachment = new BoardServiceImpl().selectAttachment(boardNo);
 			
-			request.getRequestDispatcher("/WEB-INF/views/board/detail.jsp").forward(request, response);
+			// 조회된 데이터를 Attribute에 담기
+			request.setAttribute("board", board);
+			request.setAttribute("attachment", attachment);
+			// 포워딩
+			// request.getRequestDispatcher("WEB-INF/views/board/detail.jsp").forward(request, response);
+			path = "board/detail";
+			
+		} else {
+			request.setAttribute("failMsg", "게시글 조회 실패");
+			// request.getRequestDispatcher("/webapp/WEB-INF/views/common/fail_page.jsp").forward(request, response);
+			path = "common/fail_page";
 		}
+		
+		request.getRequestDispatcher("/WEB-INF/views/" + path + ".jsp").forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
