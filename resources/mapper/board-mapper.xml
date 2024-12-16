@@ -246,17 +246,18 @@
 	
 	<select id="findById" parameterType="_int" resultType="board">
 		SELECT
-               BOARD_NO,
-               CATEGORY_NAME,
-               BOARD_TITLE,
-               BOARD_CONTENT,
-               USER_ID,
-               CREATE_DATE
+               BOARD_NO boardNo,
+               CATEGORY_NAME categoryName,
+               BOARD_TITLE boardTitle,
+               BOARD_CONTENT boardContent,
+               USER_ID boardWriter,
+               CREATE_DATE createDate
           FROM
                BOARD
           LEFT
           JOIN
                CATEGORY USING(CATEGORY_NO)
+          LEFT
           JOIN
                MEMBER ON (BOARD_WRITER = USER_NO)
          WHERE
@@ -267,17 +268,17 @@
 	
 	<select id="selectAttachment" parameterType="_int" resultType="attachment">
 		SELECT
-			   FILE_NO,
-			   ORIGIN_NAME,
-			   CHANGE_NAME,
-			   FILE_PATH
+			   FILE_NO fileNo,
+			   ORIGIN_NAME originName,
+			   CHANGE_NAME changeName,
+			   FILE_PATH filePath
 		  FROM
 			   ATTACHMENT
 		 WHERE
 		 	   REF_BNO = #{boardNo}
 		 ORDER
 		 	BY
-		 	   FILE_NO ASC
+		 	   filePath ASC
 	</select>
 	
 	

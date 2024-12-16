@@ -73,6 +73,7 @@ public class BoardDao {
 	}
 	
 	public Board findById(SqlSession sqlSession, int boardNo) {
+		System.out.println(boardNo);
 		Board board = sqlSession.selectOne("boardMapper.findById", boardNo);
 		System.out.println(board + " 여기 DAO");
 		return sqlSession.selectOne("boardMapper.findById", boardNo);

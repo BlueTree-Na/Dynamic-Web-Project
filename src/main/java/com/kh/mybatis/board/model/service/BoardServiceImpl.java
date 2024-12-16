@@ -152,6 +152,7 @@ public class BoardServiceImpl implements BoardService {
 		Board board = null;
 		
 		if(result > 0) {
+			System.out.println("나됨?");
 			board = boardDao.findById(sqlSession, boardNo);
 			sqlSession.commit();
 		} else {
